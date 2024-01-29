@@ -42,7 +42,11 @@ The application is divided into 2 services.
 3. On the root folder of this repository type the following command:
 
 ```bash
-docker compose up
+docker-compose up
 ```
 
-4. Once it has finished, the 2 microservices will run together and you can access the API documentation through http://localhost:8080/swagger/index.html
+4. Once it has finished, your terminal should roughly look like this:
+
+![Docker Composed Successfully](./deployment/docker%20compose.png)
+
+5. The 2 microservices will run together and you can access the API documentation through http://localhost:8080/swagger/index.html
