@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package payment;
+
+option go_package = "./pb";
+
+service Payment {
+    rpc Create(PaymentRequest) returns (PaymentResponse);
+}
+
+message PaymentRequest {
+    string store_name = 1;
+    string card_holder = 2;
+    float amount = 3;
+}
+
+message PaymentResponse {
+    string id = 1;
+    string store_name = 2;
+    string card_holder = 3;
+    float amount = 4;
+    string completed_at = 5;
+}

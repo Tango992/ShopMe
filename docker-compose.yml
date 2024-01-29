@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongodb/mongodb-community-server:latest
+    restart: always
+    ports:
+      - "27017:27017"
+    networks:
+      - default
+      
+  payment:
+    build:
+      context: ./payment
+    ports:
+      - "50051:50051"
+    networks:
+      - default
+
+  shopping:
+    build:
+      context: ./shopping
+    ports:
+      - "8080:8080"
+    networks:
+      - default

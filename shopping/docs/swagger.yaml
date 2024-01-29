@@ -1,0 +1,583 @@
+basePath: /
+definitions:
+  dto.GeneralResponse:
+    properties:
+      data:
+        type: string
+        x-order: "1"
+      message:
+        type: string
+        x-order: "0"
+    type: object
+  dto.LoginUser:
+    properties:
+      email:
+        type: string
+        x-order: "0"
+      password:
+        type: string
+        x-order: "1"
+    required:
+    - email
+    - password
+    type: object
+  dto.Product:
+    properties:
+      name:
+        type: string
+        x-order: "0"
+      price:
+        type: number
+        x-order: "1"
+      stock:
+        type: integer
+        x-order: "2"
+    required:
+    - name
+    - price
+    - stock
+    type: object
+  dto.ProductResponse:
+    properties:
+      data:
+        allOf:
+        - $ref: '#/definitions/models.Product'
+        x-order: "1"
+      message:
+        type: string
+        x-order: "0"
+    type: object
+  dto.ProductsResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.Product'
+        type: array
+        x-order: "1"
+      message:
+        type: string
+        x-order: "0"
+    type: object
+  dto.RegisterResponse:
+    properties:
+      data:
+        allOf:
+        - $ref: '#/definitions/dto.UserDataWithoutPassword'
+        x-order: "1"
+      message:
+        type: string
+        x-order: "0"
+    type: object
+  dto.RegisterUser:
+    properties:
+      email:
+        type: string
+        x-order: "1"
+      name:
+        type: string
+        x-order: "0"
+      password:
+        type: string
+        x-order: "2"
+    required:
+    - email
+    - name
+    - password
+    type: object
+  dto.Transaction:
+    properties:
+      product_name:
+        type: string
+        x-order: "0"
+      quantity:
+        minimum: 1
+        type: integer
+        x-order: "1"
+    required:
+    - product_name
+    - quantity
+    type: object
+  dto.TransactionResponse:
+    properties:
+      data:
+        allOf:
+        - $ref: '#/definitions/models.Transaction'
+        x-order: "1"
+      message:
+        type: string
+        x-order: "0"
+    type: object
+  dto.TransactionsResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.Transaction'
+        type: array
+        x-order: "1"
+      message:
+        type: string
+        x-order: "0"
+    type: object
+  dto.UserDataWithoutPassword:
+    properties:
+      email:
+        type: string
+        x-order: "2"
+      id:
+        type: string
+        x-order: "0"
+      name:
+        type: string
+        x-order: "1"
+    type: object
+  models.Product:
+    properties:
+      id:
+        type: string
+        x-order: "0"
+      name:
+        type: string
+        x-order: "1"
+      price:
+        type: number
+        x-order: "2"
+      stock:
+        type: integer
+        x-order: "3"
+    type: object
+  models.Transaction:
+    properties:
+      email:
+        type: string
+        x-order: "2"
+      id:
+        type: string
+        x-order: "0"
+      payment_id:
+        type: string
+        x-order: "1"
+      product:
+        type: string
+        x-order: "3"
+      quantity:
+        type: integer
+        x-order: "4"
+      total:
+        type: number
+        x-order: "5"
+    type: object
+  utils.ErrResponse:
+    properties:
+      detail:
+        type: string
+        x-order: "2"
+      status:
+        type: integer
+        x-order: "0"
+      type:
+        type: string
+        x-order: "1"
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: daniel.rahmanto@gmail.com
+    name: Daniel Osvaldo Rahmanto
+  description: Made for Graded Challenge 2 Hacktiv8 FTGO
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Graded Challenge 2
+  version: "1.0"
+paths:
+  /products:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+      summary: Get all products from database
+      tags:
+      - products
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Product data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Product'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.ProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+      summary: Add new product into database
+      tags:
+      - products
+  /products/{productId}:
+    delete:
+      parameters:
+      - description: Product ID
+        in: path
+        name: productId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+      summary: Delete specific product from database
+      tags:
+      - products
+    get:
+      parameters:
+      - description: Product ID
+        in: path
+        name: productId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+      summary: Get specific product from database
+      tags:
+      - products
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Product ID
+        in: path
+        name: productId
+        required: true
+        type: string
+      - description: Updated product data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+      summary: Update specific product from database
+      tags:
+      - products
+  /transactions:
+    get:
+      description: You will need an 'Authorization' cookie attached with this request.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TransactionsResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+      summary: Get all transaction related to the user
+      tags:
+      - transactions
+    post:
+      consumes:
+      - application/json
+      description: You will need an 'Authorization' cookie attached with this request.
+      parameters:
+      - description: Transaction data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Transaction'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.TransactionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+      summary: Create new transaction
+      tags:
+      - transactions
+  /transactions/{transactionId}:
+    delete:
+      description: You will need an 'Authorization' cookie attached with this request.
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: transactionId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TransactionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+      summary: Delete specific transaction related to the user
+      tags:
+      - transactions
+    get:
+      description: You will need an 'Authorization' cookie attached with this request.
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: transactionId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TransactionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+      summary: Get specific transaction related to the user
+      tags:
+      - transactions
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: transactionId
+        required: true
+        type: string
+      - description: Transaction data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Transaction'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TransactionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+      summary: Update specific transaction related to the user
+      tags:
+      - transactions
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Login data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GeneralResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+      summary: Log in with existing account
+      tags:
+      - users
+  /users/logout:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GeneralResponse'
+      summary: Clears authorization cookie
+      tags:
+      - users
+  /users/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Register data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RegisterUser'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.RegisterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+      summary: Register new user into database
+      tags:
+      - users
+swagger: "2.0"
